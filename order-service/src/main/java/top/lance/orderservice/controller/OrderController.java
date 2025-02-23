@@ -9,17 +9,35 @@ import org.springframework.web.client.RestTemplate;
 /**
  * @author WangL
  */
+
+//@RestController
+//public class OrderController {
+//    @Resource
+//    private RestTemplate restTemplate;
+//
+//    @GetMapping("/order")
+//    public String creatorOrder(@RequestParam String username,@RequestParam Integer productId){
+//        String userServiceUrl = "http://localhost:8081/user?username=" + username;
+//        String userInfo = restTemplate.getForObject(userServiceUrl, String.class);
+//
+//        String productUrl = "http://localhost:8083/product?productId=" + productId;
+//        String productMes = restTemplate.getForObject(productUrl, String.class);
+//
+//        return "订单创建者是："  + "订单编号：" + productMes + "--" + userInfo;
+//    }
+//}
+
 @RestController
 public class OrderController {
     @Resource
     private RestTemplate restTemplate;
 
     @GetMapping("/order")
-    public String createOrder(@RequestParam Integer orderId, @RequestParam String username, @RequestParam Integer productId){
-        String userserviceUrl = "http://localhost:8081/user?username=" + username;
-        String userInfo = restTemplate.getForObject(userserviceUrl, String.class);
-        String productServiceUrl = "http://localhost:8083/product?productId=" + productId;
-        String productInfo = restTemplate.getForObject(productServiceUrl, String.class);
-        return "订单ID："+ orderId + ",下单人: " + userInfo + ", 商品信息：" + productInfo;
+    public String creatorOrder() {
+        String userServiceUrl = "http://localhost:3000";
+        String userInfo = restTemplate.getForObject(userServiceUrl, String.class);
+
+
+        return userInfo;
     }
 }
