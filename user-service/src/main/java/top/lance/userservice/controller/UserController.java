@@ -2,11 +2,15 @@ package top.lance.userservice.controller;
 
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import top.lance.userservice.common.result.Result;
+import top.lance.userservice.config.CryProperties;
 import top.lance.userservice.model.entity.User;
 import top.lance.userservice.service.UserService;
 
@@ -15,8 +19,8 @@ import top.lance.userservice.service.UserService;
  * @projectName: user-service
  * @description:
  */
-@RestController
 @Slf4j
+@RestController
 public class UserController {
 //    @Resource
 //    private RestTemplate restTemplate;
@@ -40,10 +44,23 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    @GetMapping("/user/{id}")
-    public User getUser(@PathVariable Integer id) {
-        log.info("用户服务被调用");
-        return userService.getById(id);
-    }
+//    @GetMapping("/user/{id}")
+//    public User getUser(@PathVariable Integer id) {
+//        log.info("用户服务被调用！");
+//        return userService.getById(id);
+//    }
 
+    @Resource
+    private CryProperties cryProperties;
+
+
+    @GetMapping("/user/{id}")
+    public Result<User> getUser(@PathVariable Integer id) {
+        if (cryProperties.getServiceFlag()) {
+            User user = userService.getById(id);
+            return Result.ok(user);
+        } else {
+            return Result.error(500, "用户服务正在维护中，请稍后。。。");
+        }
+    }
 }

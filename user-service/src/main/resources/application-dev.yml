@@ -1,0 +1,17 @@
+server:
+  port: 8081
+#  port: 0
+
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: top.oranges.*.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleteFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
