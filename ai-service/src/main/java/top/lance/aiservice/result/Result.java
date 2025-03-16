@@ -1,8 +1,8 @@
-package top.lance.contentservice.model.result;
+package top.lance.aiservice.result;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import top.lance.contentservice.exception.ErrorCode;
+import top.lance.aiservice.exception.ErrorCode;
 
 
 /**

@@ -3,6 +3,7 @@ package top.lance.contentservice.openfeign;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import top.lance.contentservice.model.result.Result;
 import top.lance.contentservice.model.vo.AuthorVO;
 
 /**
@@ -10,8 +11,8 @@ import top.lance.contentservice.model.vo.AuthorVO;
  * @projectName: request-service
  * @description:
  */
-@FeignClient("user-service")
+@FeignClient(value = "user-service", fallbackFactory = UserServiceFallBackFactory.class)
 public interface UserFeignClient {
     @GetMapping("/user/{id}")
-    AuthorVO getAuthorInfo(@PathVariable Integer id);
+    Result<AuthorVO> getAuthorInfo(@PathVariable Integer id);
 }

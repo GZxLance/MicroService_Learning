@@ -24,7 +24,7 @@ public class ShareService {
 
     public ShareVO getShareWithAuthor(Integer id) {
         Share share = shareMapper.selectById(id);
-        AuthorVO author = userFeignClient.getAuthorInfo(share.getUserId());
+        AuthorVO author = userFeignClient.getAuthorInfo(share.getUserId()).getData();
         ShareVO shareVO = new ShareVO();
         shareVO.setShare(share);
         shareVO.setAuthor(author);
