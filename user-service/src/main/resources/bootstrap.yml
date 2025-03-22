@@ -31,3 +31,6 @@ spring:
           - data-id: key-config-${spring.profiles.active}.yaml
             group: lance
             refresh: true
+          - data-id: juhe-config-${spring.profiles.active}.yaml
+            group: lance
+            refresh: true

@@ -1,0 +1,50 @@
+server:
+  port: 9091
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true #启用服务发现机制
+      routes:
+        - id: user-route  # 路由的唯一标识
+          order: 1  # 数字越小，优先级约高
+          uri: lb://user-service  # 路由的匹配地址，从注册中心根据服务名称进行负载均衡路由
+          predicates:
+            - Path=/user/**  # 路由匹配的路径
+          #            - Method=GET # 请求方法必须是GET
+          #            - Query=userId, 123  # 必须携带 userId参数，值为123
+          #            - Header=token, \d+  # 必须携带token请求头，，值为数字
+          #            - Before=2025-03-21T23:59:59+08:00  # 时间必须在2025年3月21日23:59:59之前
+          #            - After=2025-03-21T23:59:59+08:00   # 时间必须在2025年3月21日23:59:59之后
+          #            - Between=2025-03-21T08:00:00+08:00,2025-03-21T23:59:59+08:00  # 时间必须在这两者之间
+          #            - JDK=21
+          filters:
+            - StripPrefix=1  # 转发路由时，去掉一层前缀 /user-service
+        #            - InvalidParameter=token,-1
+        - id: content-route  # 路由的唯一标识
+          order: 1  # 数字越小，优先级约高
+          uri: lb://content-service  # 路由的匹配地址，从注册中心根据服务名称进行负载均衡路由
+          predicates: # 断言，路由的条件
+            - Path=/content/** # 路由匹配的路径
+          filters:
+            - StripPrefix=1  # 转发路由时，去掉一层前缀 /content-service
+        - id: ai-route  # 路由的唯一标识
+          order: 1  # 数字越小，优先级约高
+          uri: lb://ai-service  # 路由的匹配地址，从注册中心根据服务名称进行负载均衡路由
+          predicates: # 断言，路由的条件
+            - Path=/ai/** # 路由匹配的路径
+            - TimeRange=08:00,20:00 # 限制服务在每天8:00-20:00之间可用
+          filters:
+            - StripPrefix=1  # 转发路由时，去掉一层前缀 /content-service
+    sentinel:
+      filter:
+        enabled: true
+      transport:
+        port: 8719
+        dashboard: localhost:8888
+      scg:
+        fallback:
+          mode: response
+          response-status: 500
+          response-body: '{"code":500,"msg":"网关流量超量！！"}'
